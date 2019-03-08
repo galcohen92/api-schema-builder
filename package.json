@@ -1,0 +1,80 @@
+{
+  "name": "api-schema-builder",
+  "version": "0.8.1",
+  "description": "build schema with validators for each endpoint",
+  "main": "index.js",
+  "nyc": {
+    "report-dir": "./coverage",
+    "lines": 95,
+    "statements": 95,
+    "functions": 100,
+    "branches": 90,
+    "include": [
+      "src/*.js"
+    ],
+    "exclude": [
+      "index.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "all": true
+  },
+  "scripts": {
+    "test": "node_modules/mocha/bin/_mocha ./test/*/*/*-test.js ./test/*/*-test.js ./test/*-test.js --recursive",
+    "test:coverage": "nyc node_modules/mocha/bin/_mocha --recursive ./test/*/*/*-test.js ./test/*/*-test.js ./test/*-test.js",
+    "node6-test": "nyc node_modules/mocha/bin/_mocha --recursive ./test/express/*/*-test.js ./test/express/*-test.js ./test/*-test.js",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "lint": "npx eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Zooz/api-schema-builder.git"
+  },
+  "keywords": [
+    "ajv",
+    "swagger",
+    "OpenAPI",
+    "open api",
+    "validation",
+    "validator"
+  ],
+  "bugs": {
+    "url": "https://github.com/Zooz/api-schema-builder"
+  },
+  "homepage": "https://github.com/Zooz/api-schema-builder",
+  "author": "Idan Tovi",
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^6.6.2",
+    "clone-deep": "^4.0.1",
+    "swagger-parser": "^6.0.2"
+  },
+  "devDependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-sinon": "^2.8.1",
+    "clear-require": "^2.0.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.15.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "express": "^4.16.4",
+    "mocha": "^6.0.2",
+    "multer": "^1.4.1",
+    "nyc": "^13.3.0",
+    "request": "^2.88.0",
+    "rewire": "^2.5.2",
+    "sinon": "^4.5.0",
+    "supertest": "^3.4.2"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}
