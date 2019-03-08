@@ -25,7 +25,7 @@ describe('oas3 check', function () {
         });
     });
     describe('check headers', function () {
-        let schemaEndpoint;
+        let schemaEndpoint, temp;
         before(async () => {
             schemaEndpoint = schema['/pet']['post'];
         });
@@ -35,16 +35,16 @@ describe('oas3 check', function () {
                 headers: { 'public-key': '1.0'
                 },
                 path: {},
-                files: undefined});
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.equal(null);
             expect(isParametersMatch).to.be.true;
         });
         it('missing required header', async function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
-                headers: {'host': 'test'},
+                headers: { 'host': 'test' },
                 path: {},
-                files: undefined});
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.eql([{
                 'dataPath': '.headers',
                 'keyword': 'required',
@@ -61,7 +61,7 @@ describe('oas3 check', function () {
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: 3,
                 path: {},
-                files: undefined});
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.eql([{
                 'dataPath': '.headers',
                 'keyword': 'type',
@@ -82,19 +82,19 @@ describe('oas3 check', function () {
         });
         it('valid query', async function () {
             let isParametersMatch = schemaEndpoint.parameters({
-                query: {page: '1'},
+                query: { page: '1' },
                 headers: {},
                 path: {},
-                files: undefined});
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.equal(null);
             expect(isParametersMatch).to.be.true;
         });
         it('missing required query', async function () {
             let isParametersMatch = schemaEndpoint.parameters({
-                query: {wrong_query: 'nothing'},
+                query: { wrong_query: 'nothing' },
                 headers: {},
                 path: {},
-                files: undefined});
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.eql([
                 {
                     'dataPath': '.query',
@@ -129,17 +129,17 @@ describe('oas3 check', function () {
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: { 'public-key': '1.0'
                 },
-                path: { name: 'kitty'},
-                files: undefined});
+                path: { name: 'kitty' },
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.equal(null);
             expect(isParametersMatch).to.be.true;
         });
         it('missing required header', async function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
-                headers: {'host': 'test'},
-                path: { namee: 'kitty'},
-                files: undefined});
+                headers: { 'host': 'test' },
+                path: { namee: 'kitty' },
+                files: undefined });
             expect(schemaEndpoint.parameters.errors).to.be.eql([
                 {
                     'dataPath': '.path',
