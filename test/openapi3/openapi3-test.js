@@ -12,7 +12,7 @@ let chai = require('chai'),
 chai.use(chaiSinon);
 describe('oas3 check', function () {
     let schema;
-    before(async () => {
+    before(async function () {
         const swaggerPath = path.join(__dirname, 'pets.yaml');
         schema = await schemaValidatorGenerator.getSchema(swaggerPath, {
             formats: [
@@ -26,7 +26,7 @@ describe('oas3 check', function () {
     });
     describe('check headers', function () {
         let schemaEndpoint, temp;
-        before(async () => {
+        before(async function() {
             schemaEndpoint = schema['/pet']['post'];
         });
         it('valid headers', async function () {
@@ -77,7 +77,7 @@ describe('oas3 check', function () {
 
     describe('check queries', function () {
         let schemaEndpoint;
-        before(async () => {
+        before(async function () {
             schemaEndpoint = schema['/pets-query']['get'];
         });
         it('valid query', async function () {
@@ -121,7 +121,7 @@ describe('oas3 check', function () {
 
     describe('check path', function () {
         let schemaEndpoint;
-        before(async () => {
+        before(async function () {
             schemaEndpoint = schema['/pets-path/:name']['get'];
         });
         it('valid headers', async function () {
@@ -169,7 +169,7 @@ describe('oas3 check', function () {
 
     describe('check body', function () {
         let schemaEndpoint;
-        before(async () => {
+        before(async function () {
             schemaEndpoint = schema['/dog']['post'];
         });
 
@@ -225,7 +225,7 @@ describe('oas3 check', function () {
         describe('body with discriminator', function () {
             describe('discriminator-pet', function () {
                 let schemaEndpoint;
-                before(async () => {
+                before(async function () {
                     schemaEndpoint = schema['/pet-discriminator']['post'];
                 });
                 it('missing discriminator field', async function () {
@@ -271,7 +271,7 @@ describe('oas3 check', function () {
                 });
             });
             describe('discriminator-multiple pet', function () {
-                before(async () => {
+                before(async function () {
                     schemaEndpoint = schema['/pet-discriminator-multiple']['post'];
                 });
                 it('missing discriminator field', async function () {
@@ -330,7 +330,7 @@ describe('oas3 check', function () {
                 });
             });
             describe('discriminator-mapping pet', function () {
-                before(async () => {
+                before(async function () {
                     schemaEndpoint = schema['/pet-discriminator-mapping']['post'];
                 });
                 it('missing discriminator field on the root', async function () {
