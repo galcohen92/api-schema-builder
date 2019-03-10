@@ -2,9 +2,7 @@
 
 let chai = require('chai'),
     expect = chai.expect,
-    sinon = require('sinon'),
     chaiSinon = require('chai-sinon'),
-    request = require('supertest'),
     schemaValidatorGenerator = require('../../index'),
     path = require('path'),
     InputValidationError = require('../inputValidationError');
@@ -12,9 +10,9 @@ let chai = require('chai'),
 chai.use(chaiSinon);
 describe('oas3 check', function () {
     let schema;
-    before(async function () {
+    before(function () {
         const swaggerPath = path.join(__dirname, 'pets.yaml');
-        schema = await schemaValidatorGenerator.getSchema(swaggerPath, {
+        return schemaValidatorGenerator.getSchema(swaggerPath, {
             formats: [
                 { name: 'double', pattern: /\d+(\.\d+)?/ },
                 { name: 'int64', pattern: /^\d{1,19}$/ },
@@ -22,14 +20,16 @@ describe('oas3 check', function () {
             ],
             beautifyErrors: true,
             firstError: false
+        }).then(receivedSchema => {
+            schema = receivedSchema;
         });
     });
     describe('check headers', function () {
-        let schemaEndpoint, temp;
-        before(async function() {
+        let schemaEndpoint;
+        before(function() {
             schemaEndpoint = schema['/pet']['post'];
         });
-        it('valid headers', async function () {
+        it('valid headers', function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: { 'public-key': '1.0'
@@ -39,7 +39,7 @@ describe('oas3 check', function () {
             expect(schemaEndpoint.parameters.errors).to.be.equal(null);
             expect(isParametersMatch).to.be.true;
         });
-        it('missing required header', async function () {
+        it('missing required header', function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: { 'host': 'test' },
@@ -56,7 +56,7 @@ describe('oas3 check', function () {
             }]);
             expect(isParametersMatch).to.be.false;
         });
-        it('invalid type for headers', async function () {
+        it('invalid type for headers', function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: 3,
@@ -77,10 +77,10 @@ describe('oas3 check', function () {
 
     describe('check queries', function () {
         let schemaEndpoint;
-        before(async function () {
+        before(function () {
             schemaEndpoint = schema['/pets-query']['get'];
         });
-        it('valid query', async function () {
+        it('valid query', function () {
             let isParametersMatch = schemaEndpoint.parameters({
                 query: { page: '1' },
                 headers: {},
@@ -89,7 +89,7 @@ describe('oas3 check', function () {
             expect(schemaEndpoint.parameters.errors).to.be.equal(null);
             expect(isParametersMatch).to.be.true;
         });
-        it('missing required query', async function () {
+        it('missing required query', function () {
             let isParametersMatch = schemaEndpoint.parameters({
                 query: { wrong_query: 'nothing' },
                 headers: {},
@@ -121,10 +121,10 @@ describe('oas3 check', function () {
 
     describe('check path', function () {
         let schemaEndpoint;
-        before(async function () {
+        before(function () {
             schemaEndpoint = schema['/pets-path/:name']['get'];
         });
-        it('valid headers', async function () {
+        it('valid headers', function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: { 'public-key': '1.0'
@@ -134,7 +134,7 @@ describe('oas3 check', function () {
             expect(schemaEndpoint.parameters.errors).to.be.equal(null);
             expect(isParametersMatch).to.be.true;
         });
-        it('missing required header', async function () {
+        it('missing required path', function () {
             // parameters match
             let isParametersMatch = schemaEndpoint.parameters({ query: {},
                 headers: { 'host': 'test' },
@@ -169,12 +169,12 @@ describe('oas3 check', function () {
 
     describe('check body', function () {
         let schemaEndpoint;
-        before(async function () {
+        before(function () {
             schemaEndpoint = schema['/dog']['post'];
         });
 
         describe('simple body', function () {
-            it('valid simple body', async function () {
+            it('valid simple body', function () {
                 // body match
                 let isBodysMatch = schemaEndpoint.body.validate({
                     'bark': 'hav hav'
@@ -182,7 +182,7 @@ describe('oas3 check', function () {
                 expect(schemaEndpoint.body.errors).to.be.equal(null);
                 expect(isBodysMatch).to.be.true;
             });
-            it('missing required field in simple body', async function () {
+            it('missing required field in simple body', function () {
                 // body match
                 let isBodysMatch = schemaEndpoint.body.validate({
                     'fur': 'hav hav'
@@ -201,7 +201,7 @@ describe('oas3 check', function () {
                 ]);
                 expect(isBodysMatch).to.be.false;
             });
-            it('invalid field type in simple body', async function () {
+            it('invalid field type in simple body', function () {
                 // body match
                 let isBodysMatch = schemaEndpoint.body.validate({
                     'bark': 111
@@ -225,10 +225,10 @@ describe('oas3 check', function () {
         describe('body with discriminator', function () {
             describe('discriminator-pet', function () {
                 let schemaEndpoint;
-                before(async function () {
+                before(function () {
                     schemaEndpoint = schema['/pet-discriminator']['post'];
                 });
-                it('missing discriminator field', async function () {
+                it('missing discriminator field', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         'bark': 'hav hav'
@@ -242,7 +242,7 @@ describe('oas3 check', function () {
                     // expect(schemaEndpoint.body.errors).to.be.equal('["Error: should be equal to one of the allowed values"]');
                     expect(isBodysMatch).to.be.false;
                 });
-                it('when discriminator type is dog and missing field', async function () {
+                it('when discriminator type is dog and missing field', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         'type': 'dog_object'
@@ -260,7 +260,7 @@ describe('oas3 check', function () {
                     ]);
                     expect(isBodysMatch).to.be.false;
                 });
-                it('valid complex body', async function () {
+                it('valid complex body', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         bark: 'hav hav',
@@ -271,10 +271,10 @@ describe('oas3 check', function () {
                 });
             });
             describe('discriminator-multiple pet', function () {
-                before(async function () {
+                before(function () {
                     schemaEndpoint = schema['/pet-discriminator-multiple']['post'];
                 });
-                it('missing discriminator field', async function () {
+                it('missing discriminator field', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         'fur': 'hav hav'
@@ -288,7 +288,7 @@ describe('oas3 check', function () {
                     // expect(schemaEndpoint.body.errors).to.be.equal('["Error: should be equal to one of the allowed values"]');
                     expect(isBodysMatch).to.be.false;
                 });
-                it('missing discriminator field on the on inside discriminator', async function () {
+                it('missing discriminator field on the on inside discriminator', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         bark: 'hav hav',
@@ -300,7 +300,7 @@ describe('oas3 check', function () {
                     expect(error.errors).to.be.equal('body/model should be equal to one of the allowed values [small_dog,big_dog]');
                     expect(isBodysMatch).to.be.false;
                 });
-                it('when discriminator type is dog_multiple and model small_dog and missing root field name and specific plane field', async function () {
+                it('when discriminator type is dog_multiple and model small_dog and missing root field name and specific plane field', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         type: 'dog_multiple',
@@ -316,7 +316,7 @@ describe('oas3 check', function () {
                     ]);
                     expect(isBodysMatch).to.be.false;
                 });
-                it('when valid discriminator type is dog_multiple and model small_dog', async function () {
+                it('when valid discriminator type is dog_multiple and model small_dog', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         name: 'sesna',
@@ -330,10 +330,10 @@ describe('oas3 check', function () {
                 });
             });
             describe('discriminator-mapping pet', function () {
-                before(async function () {
+                before(function () {
                     schemaEndpoint = schema['/pet-discriminator-mapping']['post'];
                 });
-                it('missing discriminator field on the root', async function () {
+                it('missing discriminator field on the root', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         fur: '6'
@@ -344,7 +344,7 @@ describe('oas3 check', function () {
                     expect(error.errors).to.be.equal('body/type should be equal to one of the allowed values [mapped_dog,mapped_cat]');
                     expect(isBodysMatch).to.be.false;
                 });
-                it('when discriminator type is mapped_dog and model small_dog and missing root field name and specific dog field', async function () {
+                it('when discriminator type is mapped_dog and model small_dog and missing root field name and specific dog field', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         type: 'mapped_dog',
@@ -356,7 +356,7 @@ describe('oas3 check', function () {
                     expect(error.errors).to.be.equal('body should have required property \'max_length\'');
                     expect(isBodysMatch).to.be.false;
                 });
-                it('when valid discriminator type is mapped_dog and model small_dog', async function () {
+                it('when valid discriminator type is mapped_dog and model small_dog', function () {
                     // body match
                     let isBodysMatch = schemaEndpoint.body.validate({
                         name: 'sesna',
