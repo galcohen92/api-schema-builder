@@ -1,6 +1,6 @@
 {
   "name": "api-schema-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "build schema with validators for each endpoint",
   "main": "src/index.js",
   "nyc": {
@@ -19,7 +19,7 @@
     "cache": true,
     "all": true
   },
-  "license": "Apache-2.0",
+  "license": "MIT",
   "scripts": {
     "test": "node_modules/mocha/bin/_mocha ./test/*/*/*-test.js ./test/*/*-test.js ./test/*-test.js --recursive",
     "test:coverage": "nyc node_modules/mocha/bin/_mocha --recursive ./test/*/*/*-test.js ./test/*/*-test.js ./test/*-test.js",
@@ -43,7 +43,6 @@
   },
   "homepage": "https:////github.com:galcohen92/api-schema-builder.git",
   "author": "Idan Tovi",
-  "license": "MIT",
   "dependencies": {
     "ajv": "^6.6.2",
     "clone-deep": "^4.0.1",
