@@ -6,7 +6,8 @@ var SwaggerParser = require('swagger-parser'),
     oas2 = require('./parsers/open-api2'),
     ajvUtils = require('./utils/ajv-utils'),
     Ajv = require('ajv'),
-    sourceResolver = require('./utils/sourceResolver');
+    sourceResolver = require('./utils/sourceResolver'),
+    Validators = require('./validators/index');
 
 /**
  * Initialize the input validation middleware
@@ -147,7 +148,7 @@ function buildParametersValidation(parameters, contentTypes, middlewareOptions) 
 
     ajvParametersSchema.properties.headers.content = createContentTypeHeaders(middlewareOptions.contentTypeValidation, contentTypes);
 
-    return ajv.compile(ajvParametersSchema);
+    return new Validators.SimpleValidator(ajv.compile(ajvParametersSchema));
 }
 
 module.exports = {
