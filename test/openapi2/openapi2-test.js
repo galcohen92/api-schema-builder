@@ -3,7 +3,7 @@
 let chai = require('chai'),
     expect = chai.expect,
     chaiSinon = require('chai-sinon'),
-    schemaValidatorGenerator = require('../../index'),
+    schemaValidatorGenerator = require('../../src/index'),
     path = require('path'),
     InputValidationError = require('../inputValidationError');
 
