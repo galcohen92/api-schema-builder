@@ -12,15 +12,7 @@ describe('oas3 check', function () {
     let schema;
     before(function () {
         const swaggerPath = path.join(__dirname, 'pets.yaml');
-        return schemaValidatorGenerator.getSchema(swaggerPath, {
-            formats: [
-                { name: 'double', pattern: /\d+(\.\d+)?/ },
-                { name: 'int64', pattern: /^\d{1,19}$/ },
-                { name: 'int32', pattern: /^\d{1,10}$/ }
-            ],
-            beautifyErrors: true,
-            firstError: false
-        }).then(receivedSchema => {
+        return schemaValidatorGenerator.getSchema(swaggerPath, {}).then(receivedSchema => {
             schema = receivedSchema;
         });
     });
@@ -31,7 +23,7 @@ describe('oas3 check', function () {
         });
         it('valid headers', function () {
             // parameters match
-            let isParametersMatch = schemaEndpoint.parameters({ query: {},
+            let isParametersMatch = schemaEndpoint.parameters.validate({ query: {},
                 headers: { 'public-key': '1.0'
                 },
                 path: {},
@@ -41,7 +33,7 @@ describe('oas3 check', function () {
         });
         it('missing required header', function () {
             // parameters match
-            let isParametersMatch = schemaEndpoint.parameters({ query: {},
+            let isParametersMatch = schemaEndpoint.parameters.validate({ query: {},
                 headers: { 'host': 'test' },
                 path: {},
                 files: undefined });
@@ -58,7 +50,7 @@ describe('oas3 check', function () {
         });
         it('invalid type for headers', function () {
             // parameters match
-            let isParametersMatch = schemaEndpoint.parameters({ query: {},
+            let isParametersMatch = schemaEndpoint.parameters.validate({ query: {},
                 headers: 3,
                 path: {},
                 files: undefined });
@@ -81,7 +73,7 @@ describe('oas3 check', function () {
             schemaEndpoint = schema['/pets-query']['get'];
         });
         it('valid query', function () {
-            let isParametersMatch = schemaEndpoint.parameters({
+            let isParametersMatch = schemaEndpoint.parameters.validate({
                 query: { page: '1' },
                 headers: {},
                 path: {},
@@ -90,7 +82,7 @@ describe('oas3 check', function () {
             expect(isParametersMatch).to.be.true;
         });
         it('missing required query', function () {
-            let isParametersMatch = schemaEndpoint.parameters({
+            let isParametersMatch = schemaEndpoint.parameters.validate({
                 query: { wrong_query: 'nothing' },
                 headers: {},
                 path: {},
@@ -126,7 +118,7 @@ describe('oas3 check', function () {
         });
         it('valid headers', function () {
             // parameters match
-            let isParametersMatch = schemaEndpoint.parameters({ query: {},
+            let isParametersMatch = schemaEndpoint.parameters.validate({ query: {},
                 headers: { 'public-key': '1.0'
                 },
                 path: { name: 'kitty' },
@@ -136,7 +128,7 @@ describe('oas3 check', function () {
         });
         it('missing required path', function () {
             // parameters match
-            let isParametersMatch = schemaEndpoint.parameters({ query: {},
+            let isParametersMatch = schemaEndpoint.parameters.validate({ query: {},
                 headers: { 'host': 'test' },
                 path: { namee: 'kitty' },
                 files: undefined });
