@@ -44,7 +44,7 @@
   "homepage": "https:////github.com:galcohen92/api-schema-builder.git",
   "author": "Idan Tovi",
   "dependencies": {
-    "ajv": "^6.6.2",
+    "ajv": "^6.12.3",
     "clone-deep": "^4.0.1",
     "swagger-parser": "^6.0.2"
   },
