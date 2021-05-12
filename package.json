@@ -46,7 +46,7 @@
   "dependencies": {
     "ajv": "^6.6.2",
     "clone-deep": "^4.0.1",
-    "swagger-parser": "^6.0.2"
+    "swagger-parser": "^9.0.0"
   },
   "devDependencies": {
     "body-parser": "^1.18.3",
